@@ -1,38 +1,26 @@
-# STAGE 1
-FROM node:18.17.1 as builder
+# Use a base image that includes Node.js
+FROM node:18-alpine
 
-# Set the working directory inside the container
+# Update packages in the Alpine Linux
+RUN apk update
+
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+# Copy the current directory contents into the container at /app
+COPY dist /app
 
-# Install dependencies using npm
-RUN npm install
+# Copy the package.json into the container at /app
+COPY package*.json /app
 
-# Copy the entire project directory to the working directory
-COPY . .
+# Copy the environment file into the container at /app
+COPY .env /app
 
-# Build the project
-RUN npm run build
+# Install the dependencies
+RUN npm install --omit=dev
 
-# STAGE 2
-FROM node:18.17.1-alpine
+# Define the command to run the app using PM2
+CMD ["node", "src/main.js"]
 
-# Set the working directory inside the container
-WORKDIR /app
-
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
-
-# Install production dependencies using npm
-RUN npm install --production
-
-# Copy the built application from the builder stage to the working directory
-COPY --from=builder /app/dist ./dist
-
-# Expose port 3001 for the application
+# Make port 3001 available to the world outside this container
 EXPOSE 3001
-
-# Start the application using the built files
-CMD [ "node", "dist/src/main.js" ]

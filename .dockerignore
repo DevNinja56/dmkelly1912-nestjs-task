@@ -1,6 +1,2 @@
-/**
- * This file is used to specify the files and directories that should be ignored by Docker when building an image.
- * The "build" directory is specified to be ignored, which means it will not be included in the Docker image.
- * This can be useful if there are files or directories that are not required for the application to run in a Docker container.
- */
 build
+db
