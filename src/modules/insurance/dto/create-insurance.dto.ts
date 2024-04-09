@@ -33,14 +33,14 @@ export class CreateInsuranceDto {
    * The start date of the insurance coverage.
    */
   @ApiProperty()
-  @IsDate({ message: 'Start date must be a valid date' })
+  @IsString({ message: 'Start date must be a valid date' })
   readonly startDate: Date;
 
   /**
    * The end date of the insurance coverage.
    */
   @ApiProperty()
-  @IsDate({ message: 'End date must be a valid date' })
+  @IsString({ message: 'End date must be a valid date' })
   readonly endDate: Date;
 
   /**

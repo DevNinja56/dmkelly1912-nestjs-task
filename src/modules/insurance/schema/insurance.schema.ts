@@ -95,6 +95,10 @@ export class Insurance extends Document {
     type: MongooseSchema.Types.ObjectId,
     ref: 'Users',
     required: true,
+    autopopulate: {
+      select: 'username email avatar',
+      maxDepth: 1,
+    },
   })
   userId: MongooseSchema.Types.ObjectId;
 }
@@ -108,3 +112,4 @@ export type InsuranceDocument = HydratedDocument<Insurance>;
  * The Mongoose schema for the Insurance collection.
  */
 export const InsuranceSchema = SchemaFactory.createForClass(Insurance);
+InsuranceSchema.plugin(require('mongoose-autopopulate'));

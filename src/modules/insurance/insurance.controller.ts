@@ -41,9 +41,7 @@ export class InsuranceController {
     @Body() createInsuranceDto: CreateInsuranceDto,
   ) {
     try {
-      const data = await (
-        await this.insuranceService.create(createInsuranceDto)
-      ).populate('userId');
+      const data = await this.insuranceService.create(createInsuranceDto);
 
       generalResponse({
         response,
@@ -75,7 +73,6 @@ export class InsuranceController {
       const data = await this.insuranceService.findAllWithPagination({
         page: page || 1,
         limit: limit || 10,
-        populate: 'userId',
       });
 
       generalResponse({
@@ -99,9 +96,7 @@ export class InsuranceController {
   @Get()
   async findAll(@Res() response: Response) {
     try {
-      const data = await this.insuranceService.findAll({
-        populate: 'userId',
-      });
+      const data = await this.insuranceService.findAll({});
 
       generalResponse({
         response,
@@ -125,9 +120,7 @@ export class InsuranceController {
   @Get(':id')
   async findOne(@Res() response: Response, @Param('id') id: string) {
     try {
-      const data = await (
-        await this.insuranceService.findOne({ _id: id })
-      ).populate('userId');
+      const data = await this.insuranceService.findOne({ _id: id });
       if (!data) {
         throw new NotFoundException('Enter a valid Insurance ID');
       }
@@ -157,9 +150,7 @@ export class InsuranceController {
     @Param('policyNumber') policyNumber: string,
   ) {
     try {
-      const data = await (
-        await this.insuranceService.findOne({ policyNumber })
-      ).populate('userId');
+      const data = await this.insuranceService.findOne({ policyNumber });
       if (!data) {
         throw new NotFoundException('Enter a valid Insurance ID');
       }
@@ -191,9 +182,10 @@ export class InsuranceController {
     @Body() updateInsuranceDto: UpdateInsuranceDto,
   ) {
     try {
-      const data = await (
-        await this.insuranceService.update({ _id: id }, updateInsuranceDto)
-      ).populate('userId');
+      const data = await this.insuranceService.update(
+        { _id: id },
+        updateInsuranceDto,
+      );
 
       generalResponse({
         response,
