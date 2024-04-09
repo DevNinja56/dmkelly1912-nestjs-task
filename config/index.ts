@@ -24,7 +24,7 @@ export default () => ({
      * Defaults to an empty string if not provided.
      * @type {string}
      */
-    URL: process.env.MONGO_URI || '',
+    URL: process.env.MONGO_URL || '',
 
     /**
      * Whether or not to enable logging.

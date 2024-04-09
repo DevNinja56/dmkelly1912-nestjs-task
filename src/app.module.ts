@@ -27,7 +27,7 @@ import { UserModule } from './modules/user/user.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGO_URI'),
+        uri: configService.get<string>('MONGO_URL'),
         autoIndex: true,
       }),
     }),
