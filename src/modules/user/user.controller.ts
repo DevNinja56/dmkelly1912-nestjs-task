@@ -191,6 +191,7 @@ export class UserController {
   /**
    * @description update user password
    * @method PATCH
+   * @param id
    * @param updatePasswordDto
    * @return updated user {}
    */

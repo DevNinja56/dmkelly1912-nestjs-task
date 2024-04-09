@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Document, Schema as MongooseSchema } from 'mongoose';
+import { HydratedDocument, Document } from 'mongoose';
 
 /**
  * Represents a user in the system.
