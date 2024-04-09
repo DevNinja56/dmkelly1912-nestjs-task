@@ -6,6 +6,9 @@ import configuration from 'config/index';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 
+/**
+ * The root module of the Nest application.
+ */
 @Module({
   imports: [
     ThrottlerModule.forRoot([

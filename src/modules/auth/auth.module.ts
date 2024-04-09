@@ -1,7 +1,3 @@
-/**
- * The `AuthModule` is responsible for handling authentication-related functionality.
- * It imports necessary modules, registers controllers, and provides services and strategies.
- */
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -15,6 +11,10 @@ import { EmailModule } from '../email/email.module';
 
 const { JWT_SECRET_TOKEN, JWT_TOKEN_EXPIRATION } = configuration().JWT;
 
+/**
+ * The `AuthModule` is responsible for handling authentication-related functionality.
+ * It imports necessary modules, registers controllers, and provides services and strategies.
+ */
 @Module({
   imports: [
     PassportModule.register({}),

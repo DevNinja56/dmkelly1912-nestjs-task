@@ -1,3 +1,12 @@
+/**
+ * This file is the .gitignore file for the project.
+ * It specifies the files and directories that should be ignored by Git.
+ * Ignoring certain files and directories is useful to prevent them from being tracked by version control.
+ * This .gitignore file includes patterns for ignoring compiled output, logs, OS-specific files, test coverage, IDE and editor files, and more.
+ * By ignoring these files, they will not be included in the Git repository, making the repository cleaner and more focused on the source code.
+ * This helps to avoid unnecessary conflicts and reduces the size of the repository.
+ * It is recommended to review and customize the .gitignore file based on the specific needs of the project.
+ */
 # compiled output
 /dist
 /node_modules

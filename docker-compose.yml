@@ -1,36 +1,54 @@
+# Docker Compose version
 version: '3'
 
+# Define the network configuration
 networks:
   my_network:
     external: true
 
+# Define the services (containers) to be run
 services:
+  # App service
   app:
+    # Build configuration for the app service
     build:
       context: .
       dockerfile: Dockerfile
+    # Port mapping for the app service
     ports:
       - '3001:3001'
+    # Specify the dependencies of the app service
     depends_on:
       - mongo
+    # Load environment variables from the .env file
     env_file:
       - .env
+    # Connect the app service to the my_network network
     networks:
       - my_network
 
+  # Mongo service
   mongo:
+    # Use the latest mongo image
     image: mongo:latest
+    # Set the container name to 'mongo'
     container_name: mongo
+    # Enable authentication for the mongo service
     command: [--auth]
+    # Port mapping for the mongo service
     ports:
       - '27017:27017'
+    # Mount the local './db' directory to the '/data/db' directory in the container
     volumes:
       - ./db:/data/db
+    # Set environment variables for the mongo service
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
+    # Connect the mongo service to the my_network network
     networks:
       - my_network
 
+# Define named volumes
 volumes:
   db:
