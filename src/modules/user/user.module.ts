@@ -8,12 +8,10 @@ import { UserService } from './service/user.service';
 import { UserRepository } from './repository/user.repository';
 // @Schema
 import { Users, UsersSchema } from './schema/user.schema';
-import { EmailModule } from '../email/email.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Users.name, schema: UsersSchema }]),
-    EmailModule,
   ],
   controllers: [UserController],
   providers: [UserService, UserRepository],

@@ -5,7 +5,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import configuration from 'config/index';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
-import { ContactUsModule } from './modules/contact-us/contact-us.module';
 
 @Module({
   imports: [
@@ -31,7 +30,6 @@ import { ContactUsModule } from './modules/contact-us/contact-us.module';
     }),
     AuthModule,
     UserModule,
-    ContactUsModule,
   ],
 })
 export class AppModule {}
