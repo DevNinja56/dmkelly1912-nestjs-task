@@ -8,18 +8,21 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/modules/user/service/user.service';
 import Configuration from 'config/index';
 
-const { JWT_SECRET_TOKEN } = Configuration().JWT;
+const {
+  JWT_SECRET_TOKEN,
+  JWT_SECRET_REFRESH_TOKEN,
+  JWT_TOKEN_EXPIRATION,
+  JWT_REFRESH_TOKEN_EXPIRATION,
+} = Configuration().JWT;
 
 @Injectable()
 export class AuthRepository {
   constructor(
     private readonly userServices: UserService,
-    private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -52,9 +55,8 @@ export class AuthRepository {
     return this.jwtService.sign(
       { _id: id },
       {
-        secret: this.configService.get('JWT.JWT_SECRET_TOKEN'),
-        expiresIn:
-          expiresIn || this.configService.get('JWT.JWT_TOKEN_EXPIRATION'),
+        secret: JWT_SECRET_TOKEN,
+        expiresIn: expiresIn || JWT_TOKEN_EXPIRATION,
       },
     );
   }
@@ -69,10 +71,8 @@ export class AuthRepository {
     return this.jwtService.sign(
       { _id: id },
       {
-        secret: this.configService.get('JWT.JWT_SECRET_REFRESH_TOKEN'),
-        expiresIn:
-          expiresIn ||
-          this.configService.get('JWT.JWT_REFRESH_TOKEN_EXPIRATION'),
+        secret: JWT_SECRET_REFRESH_TOKEN,
+        expiresIn: expiresIn || JWT_REFRESH_TOKEN_EXPIRATION,
       },
     );
   }
