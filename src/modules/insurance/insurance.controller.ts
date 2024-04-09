@@ -14,13 +14,16 @@ import {
   HttpException,
   NotFoundException,
   Query,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { InsuranceService } from './service/insurance.service';
 import { CreateInsuranceDto, UpdateInsuranceDto } from './dto';
 import { generalResponse } from 'src/utils';
+import { FilterInsuranceDto } from './dto/filter-insurance.dto';
 
 @ApiTags('Insurance')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -35,6 +38,10 @@ export class InsuranceController {
    * @return newly created insurance {}
    */
   @ApiBearerAuth()
+  @ApiBody({
+    type: CreateInsuranceDto,
+    description: 'Payload to filter insurances',
+  })
   @Post()
   async create(
     @Res() response: Response,
@@ -62,12 +69,22 @@ export class InsuranceController {
    * @return paginated insurance {}
    */
   @ApiBearerAuth()
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Page number for pagination',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Number of items per page',
+  })
   @UseGuards(AuthGuard('validate_token'))
   @Get('paginated')
   async findAllPaginated(
     @Res() response: Response,
-    @Query('page') page: number,
-    @Query('limit') limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
     try {
       const data = await this.insuranceService.findAllWithPagination({
@@ -154,6 +171,62 @@ export class InsuranceController {
       if (!data) {
         throw new NotFoundException('Enter a valid Insurance ID');
       }
+
+      generalResponse({
+        response,
+        message: 'Insurance found successfully',
+        status: HttpStatus.OK,
+        data,
+      });
+    } catch (error) {
+      throw new HttpException(error['message'], error['status']);
+    }
+  }
+
+  /**
+   * @description get all insurance paginated
+   * @method GET
+   * @param page
+   * @param limit
+   * @return paginated insurance {}
+   */
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('validate_token'))
+  @ApiBody({
+    type: FilterInsuranceDto,
+    description: 'Payload to filter insurances',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Page number for pagination',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Number of items per page',
+  })
+  @Post('filter-by-user-quote')
+  async findAllPaginatedByUserQuote(
+    @Res() response: Response,
+    @Body() body: FilterInsuranceDto,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    try {
+      const { insuranceType, premiumAmount, tenure } = body;
+
+      const filters = {
+        ...(insuranceType && { insuranceType }),
+        ...(premiumAmount && { premiumAmount }),
+        ...(tenure && { tenure }),
+      };
+
+      const data = await this.insuranceService.findAllWithPagination({
+        filterQuery: filters,
+        page,
+        limit,
+      });
 
       generalResponse({
         response,

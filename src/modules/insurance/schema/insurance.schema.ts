@@ -29,7 +29,8 @@ export class Insurance extends Document {
    */
   @Prop({
     type: Number,
-    required: true,
+    required: false,
+    default: null,
   })
   policyNumber: number;
 
@@ -57,7 +58,8 @@ export class Insurance extends Document {
    */
   @Prop({
     type: Date,
-    required: true,
+    required: false,
+    default: null,
   })
   startDate: Date;
 
@@ -66,7 +68,8 @@ export class Insurance extends Document {
    */
   @Prop({
     type: Date,
-    required: true,
+    required: false,
+    default: null,
   })
   endDate: Date;
 
@@ -94,7 +97,8 @@ export class Insurance extends Document {
   @Prop({
     type: MongooseSchema.Types.ObjectId,
     ref: 'Users',
-    required: true,
+    required: false,
+    default: null,
     autopopulate: {
       select: 'username email avatar',
       maxDepth: 1,
