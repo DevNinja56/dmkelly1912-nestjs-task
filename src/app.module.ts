@@ -5,6 +5,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import configuration from 'config/index';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
+import { InsuranceModule } from './modules/insurance/insurance.module';
 
 /**
  * The root module of the Nest application.
@@ -33,6 +34,7 @@ import { UserModule } from './modules/user/user.module';
     }),
     AuthModule,
     UserModule,
+    InsuranceModule,
   ],
 })
 export class AppModule {}
