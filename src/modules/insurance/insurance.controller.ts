@@ -41,7 +41,9 @@ export class InsuranceController {
     @Body() createInsuranceDto: CreateInsuranceDto,
   ) {
     try {
-      const data = await this.insuranceService.create(createInsuranceDto);
+      const data = await (
+        await this.insuranceService.create(createInsuranceDto)
+      ).populate('userId');
 
       generalResponse({
         response,
@@ -73,6 +75,7 @@ export class InsuranceController {
       const data = await this.insuranceService.findAllWithPagination({
         page: page || 1,
         limit: limit || 10,
+        populate: 'userId',
       });
 
       generalResponse({
@@ -96,7 +99,9 @@ export class InsuranceController {
   @Get()
   async findAll(@Res() response: Response) {
     try {
-      const data = await this.insuranceService.findAll({});
+      const data = await this.insuranceService.findAll({
+        populate: 'userId',
+      });
 
       generalResponse({
         response,
@@ -120,7 +125,9 @@ export class InsuranceController {
   @Get(':id')
   async findOne(@Res() response: Response, @Param('id') id: string) {
     try {
-      const data = await this.insuranceService.findOne({ _id: id });
+      const data = await (
+        await this.insuranceService.findOne({ _id: id })
+      ).populate('userId');
       if (!data) {
         throw new NotFoundException('Enter a valid Insurance ID');
       }
@@ -150,7 +157,9 @@ export class InsuranceController {
     @Param('policyNumber') policyNumber: string,
   ) {
     try {
-      const data = await this.insuranceService.findOne({ policyNumber });
+      const data = await (
+        await this.insuranceService.findOne({ policyNumber })
+      ).populate('userId');
       if (!data) {
         throw new NotFoundException('Enter a valid Insurance ID');
       }
@@ -182,10 +191,9 @@ export class InsuranceController {
     @Body() updateInsuranceDto: UpdateInsuranceDto,
   ) {
     try {
-      const data = await this.insuranceService.update(
-        { _id: id },
-        updateInsuranceDto,
-      );
+      const data = await (
+        await this.insuranceService.update({ _id: id }, updateInsuranceDto)
+      ).populate('userId');
 
       generalResponse({
         response,
