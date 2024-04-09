@@ -3,13 +3,19 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-custom';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-// @Configuration
 import Configuration from 'config/index';
-// @Services
 import { UserService } from 'src/modules/user/service/user.service';
 
 const { JWT_SECRET_TOKEN } = Configuration().JWT;
 
+/**
+ * Validates the JWT token and returns the authenticated user.
+ * Throws an UnauthorizedException if the token is invalid or the user is not found.
+ *
+ * @param req - The HTTP request object.
+ * @returns The authenticated user.
+ * @throws UnauthorizedException if the token is invalid or the user is not found.
+ */
 @Injectable()
 export class LocalStrategy extends PassportStrategy(
   Strategy,

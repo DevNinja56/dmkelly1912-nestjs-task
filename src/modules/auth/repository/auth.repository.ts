@@ -1,3 +1,6 @@
+/**
+ * Repository class for handling authentication-related operations.
+ */
 import {
   HttpException,
   Injectable,
@@ -7,7 +10,6 @@ import {
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-// @Services
 import { UserService } from 'src/modules/user/service/user.service';
 import Configuration from 'config/index';
 
@@ -21,6 +23,12 @@ export class AuthRepository {
     private readonly jwtService: JwtService,
   ) {}
 
+  /**
+   * Updates the refresh token for a user.
+   * @param refreshToken - The new refresh token.
+   * @param id - The ID of the user.
+   * @returns A promise that resolves to the updated user.
+   */
   async updateRefreshTokenInUser(refreshToken: string, id: string) {
     if (refreshToken) {
       refreshToken = await bcrypt.hash(refreshToken, 10);
@@ -34,6 +42,12 @@ export class AuthRepository {
     );
   }
 
+  /**
+   * Generates an access token for a user.
+   * @param id - The ID of the user.
+   * @param expiresIn - The expiration time for the token (optional).
+   * @returns A promise that resolves to the access token.
+   */
   async getAccessToken(id: string, expiresIn?: string) {
     return this.jwtService.sign(
       { _id: id },
@@ -45,6 +59,12 @@ export class AuthRepository {
     );
   }
 
+  /**
+   * Generates a refresh token for a user.
+   * @param id - The ID of the user.
+   * @param expiresIn - The expiration time for the token (optional).
+   * @returns A promise that resolves to the refresh token.
+   */
   async getRefreshToken(id: string, expiresIn?: string) {
     return this.jwtService.sign(
       { _id: id },
@@ -57,6 +77,12 @@ export class AuthRepository {
     );
   }
 
+  /**
+   * Verifies the validity of a token.
+   * @param token - The token to verify.
+   * @returns The user associated with the token.
+   * @throws UnauthorizedException if the token is invalid or expired.
+   */
   async verifyToken(token: string) {
     this.jwtService.verify(token, {
       secret: JWT_SECRET_TOKEN,
@@ -82,6 +108,13 @@ export class AuthRepository {
     return user;
   }
 
+  /**
+   * Retrieves the user associated with a refresh token.
+   * @param refreshToken - The refresh token.
+   * @returns A promise that resolves to the user.
+   * @throws NotFoundException if the user is not found.
+   * @throws HttpException if an error occurs during the operation.
+   */
   async getUserIfRefreshTokenMatches(refreshToken: string) {
     try {
       const user = await this.userServices.findOne({
@@ -98,6 +131,11 @@ export class AuthRepository {
     }
   }
 
+  /**
+   * Generates a new access token and refresh token for a user.
+   * @param id - The ID of the user.
+   * @returns A promise that resolves to an object containing the new access token and refresh token.
+   */
   async getNewAccessAndRefreshToken(id: string) {
     const refreshToken = await this.getRefreshToken(id);
     await this.updateRefreshTokenInUser(refreshToken, id);
